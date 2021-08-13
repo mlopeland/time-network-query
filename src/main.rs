@@ -29,7 +29,8 @@ fn server_thread(local : String) {
           Ok(_) => {
             match str::from_utf8(&data) {
               Ok(res) => {
-                println!("Time received: {}", res);
+                println!("Local time:  {}", Utc::now().to_rfc3339());
+                println!("Remote time: {}", res);
                 break;
               },
               Err(err) => {

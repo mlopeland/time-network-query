@@ -1,8 +1,16 @@
 ### Development
 
+Environment
+
 ```
 docker-compose up -d
 docker-compose exec rust sh
+```
+
+Compile and run
+
+```
+cargo run 0.0.0.0:8899 0.0.0.0:8899
 ```
 
 ### Links
