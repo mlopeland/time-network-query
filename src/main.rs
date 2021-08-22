@@ -3,13 +3,15 @@ use std::{ thread, time, str, env };
 use std::io::{ Write, Read };
 use chrono::Utc;
 
+mod logger;
+
 fn client_thread(target : String) {
   loop {
     match TcpStream::connect(format!("{}", target)) {
       Ok(mut stream) => {
         let msg = Utc::now().to_rfc3339();
         stream.write(msg.as_bytes()).unwrap();
-        break;
+        // break;
       },
       Err(err) => {
         println!("Client failed to connect: {}", err);
@@ -29,9 +31,8 @@ fn server_thread(local : String) {
           Ok(_) => {
             match str::from_utf8(&data) {
               Ok(res) => {
-                println!("Local time:  {}", Utc::now().to_rfc3339());
-                println!("Remote time: {}", res);
-                break;
+                logger::log(Utc::now().to_rfc3339(), res.to_string());
+                // break;
               },
               Err(err) => {
                 println!("{}", err);

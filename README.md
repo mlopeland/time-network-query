@@ -34,3 +34,4 @@ PATH="/home/osxcross/target/bin:$PATH" cargo build --target x86_64-apple-darwin
 - https://rust-lang-nursery.github.io/rust-cookbook/datetime/parse.html#display-formatted-date-and-time
 - https://doc.rust-lang.org/book/ch12-01-accepting-command-line-arguments.html
 - https://wapl.es/rust/2019/02/17/rust-cross-compile-linux-to-macos.html
+- https://doc.rust-lang.org/book/ch20-03-graceful-shutdown-and-cleanup.html
