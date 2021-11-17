@@ -1,9 +1,8 @@
 use std::fs::OpenOptions;
 use std::io::Write;
 
-pub fn log(local : String, remote : String) {
-  println!("Local time:  {}", local);
-  println!("Remote time: {}\n", remote);
+pub fn log(local : String, remote : String, diff: String) {
+  println!("Latency: {} ms", diff);
   
   let mut file = OpenOptions::new()
     .write(true)
@@ -12,7 +11,7 @@ pub fn log(local : String, remote : String) {
     .open("log.txt")
     .unwrap();
 
-  if let Err(err) = writeln!(file, "{},{}", local, remote) {
+  if let Err(err) = writeln!(file, "{},{},{}", local, remote, diff) {
     eprintln!("Failed to write log.txt {}", err);
   }
 }

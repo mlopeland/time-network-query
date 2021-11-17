@@ -1,7 +1,8 @@
 use std::net::{ TcpListener, TcpStream };
 use std::{ thread, time, str, env };
 use std::io::{ Write, Read };
-use chrono::Utc;
+use std::vec::Vec;
+use chrono::{ Utc, DateTime };
 
 mod logger;
 
@@ -9,7 +10,8 @@ fn client_thread(target : String) {
   loop {
     match TcpStream::connect(format!("{}", target)) {
       Ok(mut stream) => {
-        let msg = Utc::now().to_rfc3339();
+        let timestamp : DateTime<Utc> = Utc::now();
+        let msg = format!("{},{},", Utc::now().to_rfc3339(), timestamp.timestamp_millis());
         stream.write(msg.as_bytes()).unwrap();
         // break;
       },
@@ -31,7 +33,12 @@ fn server_thread(local : String) {
           Ok(_) => {
             match str::from_utf8(&data) {
               Ok(res) => {
-                logger::log(Utc::now().to_rfc3339(), res.to_string());
+                let local : DateTime<Utc> = Utc::now();
+                let parts : Vec<&str> = res.split(',').collect();
+                let remote_millis : i64 = parts[1].parse().unwrap();
+                let local_millis : i64 = local.timestamp_millis();
+                let diff : i64 = local_millis - remote_millis;
+                logger::log(local.to_rfc3339(), parts[0].to_string(), diff.to_string());
                 // break;
               },
               Err(err) => {
