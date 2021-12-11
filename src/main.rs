@@ -23,7 +23,7 @@ fn client_thread(target : String) {
   }
 }
 
-fn server_thread(local : String) {
+fn server_thread(local : String, filename : &String) {
   let listener = TcpListener::bind(local).unwrap();
   for stream in listener.incoming() {
     match stream {
@@ -38,7 +38,7 @@ fn server_thread(local : String) {
                 let remote_millis : i64 = parts[1].parse().unwrap();
                 let local_millis : i64 = local.timestamp_millis();
                 let diff : i64 = local_millis - remote_millis;
-                logger::log(local.to_rfc3339(), parts[0].to_string(), diff.to_string());
+                logger::log(local.to_rfc3339(), parts[0].to_string(), diff.to_string(), filename);
                 // break;
               },
               Err(err) => {
@@ -62,9 +62,10 @@ fn main() {
   let args : Vec<String> = env::args().collect();
   let target = format!("{}", args[1]);
   let local = format!("{}", args[2]);
+  let name = format!("{}", args[3]);
 
-  let server = thread::spawn(|| {
-    server_thread(local);
+  let server = thread::spawn(move || {
+    server_thread(local, &name);
   });  
 
   let client = thread::spawn(|| {
